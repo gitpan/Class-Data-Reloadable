@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Class-Data-Reloadable
-version: 0.01
+version: 0.02
 author:
   - David Baird <cpan@riverside-cms.co.uk>
 abstract: |-
@@ -17,5 +17,5 @@ requires:
 provides:
   Class::Data::Reloadable:
     file: lib/Class/Data/Reloadable.pm
-    version: 0.01
+    version: 0.02
 generated_by: Module::Build version 0.26

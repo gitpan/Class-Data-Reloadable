@@ -7,7 +7,11 @@ in mod_perl development, and may be useful elsewhere.
 CHANGES
 
 version     date         changes
-------------------------------
+----------------------------------------
+0.02        19 Nov 2004  - minor pod updates
+                         - changed $ClassData from 'my' to 'our'
+                         - added $DEBUG global
+
 0.01        12 Nov 2004  Initial release
 
 INSTALLATION

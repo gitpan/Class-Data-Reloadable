@@ -6,9 +6,9 @@ use Carp;
 use Class::ISA;
 use NEXT;
 
-our ( $VERSION, $AUTOLOAD );
+our ( $VERSION, $AUTOLOAD, $DEBUG );
 
-sub _debug { 0 }
+$DEBUG = 0;
 
 =head1 NAME
 
@@ -16,16 +16,16 @@ Class::Data::Reloadable - inheritable, overridable class data that survive reloa
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 =head1 SYNOPSIS
 
     package Stuff;
-    use base qw(Class::Data::Inheritable);
+    use base qw(Class::Data::Reloadable);
 
     # Set up DataFile as inheritable class data.
     Stuff->mk_classdata('DataFile');
@@ -54,6 +54,22 @@ Saves many (if your code starts out buggy like mine) Apache restarts.
 But only if you're strict about storing B<all> class data using this mechanism.
 
 See L<Class::Data::Inheritable|Class::Data::Inheritable> for more examples.
+
+=head2 Drop-in
+
+If you want to switch over to this module in a large app, instead of changing
+all references to L<Class::Data::Inheritable|Class::Data::Inheritable>, you can
+instead create an empty subclass C<Class::Data::Inheritable> and put it somewhere
+in your Perl search path that gets searched before the path with the real
+L<Class::Data::Inheritable|Class::Data::Inheritable>, e.g.
+
+    use lib '/my/lib';
+
+and /my/lib/Class/Data/Inheritable.pm is:
+
+    package Class::Data::Inheritable;
+    use base 'Class::Data::Reloadable';
+    1;
 
 =head1 METHODS
 
@@ -105,7 +121,7 @@ sub AUTOLOAD {
 
     my ( $attribute ) = $AUTOLOAD =~ /([^:]+)$/;
 
-    warn "AUTOLOADING $attribute in $proto\n" if $proto->_debug;
+    warn "AUTOLOADING $attribute in $proto\n" if $DEBUG;
 
     if ( my $owner = $proto->__has( $attribute ) )
     {
@@ -115,8 +131,9 @@ sub AUTOLOAD {
     }
     else
     {
+        warn "'$attribute' not owned by C::D::Reloadable client - delegating AUTOLOAD in $proto\n" if $DEBUG;
         # maybe it was intended for somewhere else
-        $proto->NEXT::ACTUAL::DISTINCT::AUTOLOAD( @_ );
+        return $proto->NEXT::ACTUAL::DISTINCT::AUTOLOAD( @_ );
     }
 }
 
@@ -127,7 +144,7 @@ sub __mk_accessor {
 
     my $client = ref( $proto ) || $proto;
 
-    warn "making '$attribute' accessor in $client\n" if $proto->_debug;
+    warn "making '$attribute' accessor in $client\n" if $DEBUG;
 
     my $accessor = sub { shift->__classdata( $attribute, @_ ) };
 
@@ -140,7 +157,8 @@ sub __mk_accessor {
     $proto->$attribute( $_[0] ) if @_;
 }
 
-my $ClassData;
+# in case you want to mess with it - but don't do that
+our $ClassData;
 
 sub __classdata {
     my ( $proto, $attribute ) = ( shift, shift );
@@ -186,6 +204,14 @@ Please report any bugs or feature requests to
 C<bug-class-data-separated@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.  I will be notified, and then you'll automatically
 be notified of progress on your bug as I make changes.
+
+=head1 DEBUGGING
+
+Set C<$Class::Data::Reloadable::DEBUG = 1> to get debugging output (via C<warn>) that
+may be useful for debugging either this module, or classes that inherit from it.
+
+You may also want to dig around in C<$Class::Data::Reloadable::ClassData>, but
+don't tell anyone I told you.
 
 =head1 COPYRIGHT & LICENSE
 
