@@ -8,19 +8,17 @@ use NEXT;
 
 our ( $VERSION, $AUTOLOAD, $DEBUG );
 
-$DEBUG = 0;
-
 =head1 NAME
 
 Class::Data::Reloadable - inheritable, overridable class data that survive reloads
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 =head1 SYNOPSIS
 

@@ -8,6 +8,7 @@ CHANGES
 
 version     date         changes
 ----------------------------------------
+0.03        19 Nov 2004  - removed unnecessary $DEBUG = 0
 0.02        19 Nov 2004  - minor pod updates
                          - changed $ClassData from 'my' to 'our'
                          - added $DEBUG global
