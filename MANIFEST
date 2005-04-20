@@ -12,3 +12,4 @@ t/MyOtherTestClass.pm
 t/MyTestClass.pm
 t/pod-coverage.t
 t/pod.t
+Makefile.PL

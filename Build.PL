@@ -18,6 +18,7 @@ my $builder = Module::Build->new(
 
     },
     add_to_cleanup      => [ 'Class-Data-Reloadable-*' ],
+    create_makefile_pl  => 'traditional',
 );
 
 $builder->create_build_script();

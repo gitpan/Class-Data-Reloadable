@@ -2,6 +2,7 @@ package Class::Data::Reloadable;
 use warnings;
 use strict;
 use Carp;
+# use Devel::StackTrace;
 
 use Class::ISA;
 use NEXT;
@@ -12,13 +13,9 @@ our ( $VERSION, $AUTOLOAD, $DEBUG );
 
 Class::Data::Reloadable - inheritable, overridable class data that survive reloads
 
-=head1 VERSION
-
-Version 0.03
-
 =cut
 
-$VERSION = '0.03';
+$VERSION = 0.04;
 
 =head1 SYNOPSIS
 
@@ -119,9 +116,16 @@ sub AUTOLOAD {
 
     my ( $attribute ) = $AUTOLOAD =~ /([^:]+)$/;
 
-    warn "AUTOLOADING $attribute in $proto\n" if $DEBUG;
+    warn "AUTOLOADING $attribute ($AUTOLOAD) in $proto\n" if $DEBUG;
 
-    if ( my $owner = $proto->__has( $attribute ) )
+    my $owner = eval { $proto->__has( $attribute ) };
+
+    if ( my $er = $@ )
+    {
+        die "Error AUTOLOADing $AUTOLOAD for $proto - $er";
+    }
+
+    if ( $owner )
     {
         # put it back where it came from
         $owner->__mk_accessor( $attribute );

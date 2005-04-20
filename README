@@ -4,17 +4,6 @@ A drop-in replacement for L<Class::Data::Inheritable|Class::Data::Inheritable>,
 but subclasses can be reloaded without losing their class data. This is useful
 in mod_perl development, and may be useful elsewhere.
 
-CHANGES
-
-version     date         changes
-----------------------------------------
-0.03        19 Nov 2004  - removed unnecessary $DEBUG = 0
-0.02        19 Nov 2004  - minor pod updates
-                         - changed $ClassData from 'my' to 'our'
-                         - added $DEBUG global
-
-0.01        12 Nov 2004  Initial release
-
 INSTALLATION
 
 To install this module, run the following commands:
